@@ -1,0 +1,51 @@
+mysqld sample, Version: 8.0.36-example (example build). started with:
+Tcp port: 3306  Unix socket: /tmp/mysql.sock
+Time                 Id Command    Argument
+
+# Time: 2026-01-15T10:00:00.000000Z
+# User@Host: app_ro[app_ro] @ app.example.com [192.0.2.10]  Id: 11
+# Query_time: 1.500000  Lock_time: 0.010000 Rows_sent: 2  Rows_examined: 1000
+use shop;
+SET timestamp=1768471200;
+SELECT id FROM orders WHERE status = 'open' AND id = 7;
+
+# Time: 2026-01-15T10:05:00.000000Z
+# User@Host: app_ro[app_ro] @ app.example.com [192.0.2.11]  Id: 12
+# Query_time: 2.250000  Lock_time: 0.020000 Rows_sent: 3  Rows_examined: 4000
+use shop;
+SET timestamp=1768471500;
+SELECT id FROM orders WHERE status = 'hold' AND id = 8;
+
+# Time: 2026-01-15T10:20:00.000000Z
+# User@Host: report_job[report_job] @ batch.example.com [198.51.100.20]  Id: 30
+# Query_time: 4.000000  Lock_time: 0.050000 Rows_sent: 20  Rows_examined: 80000
+use shop;
+SET timestamp=1768472400;
+SELECT o.id, p.amount
+FROM orders AS o
+JOIN payments AS p ON p.order_id = o.id
+WHERE o.created_on >= '2026-01-01'
+  AND p.state IN (1, 2, 3);
+
+# Time: 2026-01-15T10:40:00.000000Z
+# User@Host: app_ro[app_ro] @ 10.1.2.3 [10.1.2.3]  Id: 31
+# Query_time: 0.800000  Lock_time: 0.200000 Rows_sent: 0  Rows_examined: 500
+use shop;
+SET timestamp=1768473600;
+UPDATE inventory
+SET on_hand = on_hand - 1
+WHERE sku = 'sku-9'
+  AND warehouse_id = 4;
+
+# Time: 2026-01-15T11:00:00.000000Z
+# User@Host: dba_ops[dba_ops] @ 192.168.10.5 [192.168.10.5]  Id: 40
+# Query_time: 3.000000  Lock_time: 0.000000 Rows_sent: 0  Rows_examined: 0
+use shop;
+SET timestamp=1768474800;
+ANALYZE TABLE orders;
+
+# Time: 2026-01-15T11:10:00.000000Z
+# User@Host: report_job[report_job] @ batch.example.com [203.0.113.5]  Id: 41
+# Query_time: 0.400000  Lock_time: 0.001000 Rows_sent: 1  Rows_examined: 50 Thread_id: 41 Errno: 0 Killed: 0 Bytes_received: 80 Bytes_sent: 120 Read_first: 0 Read_last: 0 Read_key: 1 Read_prev: 0 Read_rnd: 0 Sort_merge_passes: 0 Sort_range_count: 0 Sort_rows: 1 Sort_scan_count: 0 Created_tmp_disk_tables: 0 Created_tmp_tables: 0 Start: 2026-01-15T11:10:00.000000Z End: 2026-01-15T11:10:00.400000Z Example_extra: 7
+SET timestamp=1768475400;
+SELECT sku FROM catalog WHERE sku = 'a-1';
